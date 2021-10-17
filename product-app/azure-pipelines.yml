@@ -1,0 +1,37 @@
+trigger:
+  branches:
+    include:
+      - "*"
+  paths:
+    include:
+      - product-app
+    exclude:
+      - README.md
+      - CHANGELOG.md
+      - Makefile
+      - product-app/azure-pipelines-db.yml
+      - product-app/azure-pipelines.yml
+
+resources:
+  repositories:
+    - repository: default
+      type: git
+      name: TheWorld
+
+variables:
+  - group: common-vars
+    
+pool:
+  vmImage: $(POOL_IMAGE)
+
+steps:
+  - template: templates/step-ng-ecr-ci.yml@default
+    parameters:
+      path: product-app
+      serviceName: product_app
+      dockerFile: templates/Dockerfile
+  - template: templates/step-auto-pl-ci.yml@default
+    parameters:
+      repoName: TheInfra
+      filePath: /prod/service-product/IMAGE
+      fileContent: $(IMAGE_VERSION)

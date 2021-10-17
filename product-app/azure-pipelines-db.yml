@@ -1,0 +1,41 @@
+trigger:
+  branches:
+    include:
+      - "*"
+  paths:
+    include:
+      - product-app/prisma
+    exclude:
+      - README.md
+      - CHANGELOG.md
+      - Makefile
+
+resources:
+  repositories:
+    - repository: default
+      type: git
+      name: TheWorld
+
+variables:
+  - group: common-vars
+    
+pool: "prod-demo-az-agent"
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: $(NODE_BUILD_VERSION)
+    displayName: Install Node.js
+  
+  - script: npm install -g prisma
+  - task: SystemsManagerGetParameter@1
+    inputs:
+      awsCredentials: 'AWS_CONNECTION'
+      regionName: 'ap-southeast-1'
+      readMode: 'hierarchy'
+      parameterPath: '/prod/demo/postgres'
+      recursive: true
+  - script: prisma migrate deploy
+    env:
+      DATABASE_URL: $(/PROD/DEMO/POSTGRES/PRODUCT-DB)
+    workingDirectory: product-app
