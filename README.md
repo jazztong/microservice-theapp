@@ -1,6 +1,6 @@
-# node-micro-app-demo
+# Microservice The App repository
 
-A sample nodejs micro-services demo application
+A repository that demonstrate microservice project with monorepo
 
 ## Start database
 
