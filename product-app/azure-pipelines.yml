@@ -32,6 +32,6 @@ steps:
       dockerFile: templates/Dockerfile
   - template: templates/step-auto-pl-ci.yml@default
     parameters:
-      repoName: TheInfra
+      repoName: microservice-theinfra
       filePath: /prod/service-product/IMAGE
       fileContent: $(IMAGE_VERSION)
